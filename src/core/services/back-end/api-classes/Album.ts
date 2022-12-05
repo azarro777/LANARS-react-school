@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { ServerError } from ".";
 import { BackEndAbstract } from "./BackEndAbstract";
-import Ialbum from "shared/interfaces/album";
 
 export class Album extends BackEndAbstract<AlbumEntity> {
   readonly route = "/api/albums";
@@ -40,7 +39,7 @@ export class Album extends BackEndAbstract<AlbumEntity> {
   }
 }
 
-class AlbumEntity implements Ialbum {
+class AlbumEntity {
   title = "";
   description = "";
   photos = [];
