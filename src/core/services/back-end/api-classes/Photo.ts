@@ -11,7 +11,7 @@ export class Photo extends BackEndAbstract<PhotoEntity> {
     super();
   }
 
-  validate(data: any, checkRequired = true) {
+  validate(data: any, checkRequired = true): void {
     const allFields = Object.keys(new PhotoEntity(data));
 
     if (checkRequired) {
@@ -47,7 +47,7 @@ class PhotoEntity {
   date = 0;
   size = 0;
   type = '';
-  
+
   constructor(data: PhotoEntity) {
     this.date = data.date;
     this.description = data.description;

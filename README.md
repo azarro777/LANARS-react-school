@@ -1,6 +1,9 @@
 # LANARS react school
 #### This is a base for a future photo album project
 
+## Deploy
+https://live-gallery.netlify.app/
+
 ## Project resources:
 
 ## Help services:
