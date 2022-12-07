@@ -1,17 +1,23 @@
 /* eslint-disable */
-import { ServerError } from '.';
-import { BackEndAbstract } from './BackEndAbstract';
+import { ServerError } from ".";
+import { BackEndAbstract } from "./BackEndAbstract";
 
 export class Album extends BackEndAbstract<AlbumEntity> {
+<<<<<<< HEAD
+  readonly route = "/api/albums";
+  readonly tableName = "albums";
+  readonly requiredFields = ["title", "description"];
+=======
   readonly route = '/api/albums';
   readonly tableName = 'albums';
-  readonly requiredFields = ['title', 'description'];
+  readonly requiredFields = ['title'];
+>>>>>>> main
 
   constructor() {
     super();
   }
 
-  validate(data: any, checkRequired = true) {
+  validate(data: any, checkRequired = true): void {
     const allFields = Object.keys(new AlbumEntity(data));
 
     if (checkRequired) {
@@ -26,7 +32,9 @@ export class Album extends BackEndAbstract<AlbumEntity> {
       if (!allFields.includes(key)) {
         throw new ServerError(
           400,
-          `Unknown property "${key}". You can only use one of the following: "${allFields.join('", "')}"`,
+          `Unknown property "${key}". You can only use one of the following: "${allFields.join(
+            '", "'
+          )}"`
         );
       }
     }
@@ -38,15 +46,21 @@ export class Album extends BackEndAbstract<AlbumEntity> {
 }
 
 class AlbumEntity {
-  title = '';
-  description = '';
-  photos = []; 
+  title = "";
+  description = "";
+  photos = [];
   date: number;
+  id?: number;
 
   constructor(data: AlbumEntity) {
     this.date = Date.now();
     this.title = data.title;
-    this.description = data.description;
+    this.description = data.description || '';
     this.photos = data.photos || this.photos;
+    if (data.id) {
+      this.id = data.id;
+    } else {
+      delete this.id;
+    }
   }
 }
