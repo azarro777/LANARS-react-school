@@ -16,7 +16,8 @@ export abstract class BackEndAbstract<Entity extends object> {
   constructor() {}
 
   async create<T extends Entity>(data: T): Promise<T> {
-    return Storage.putValue(this.tableName, this.entity(data));
+    const newId = await Storage.putValue(this.tableName, this.entity(data));
+    return Storage.getValue(this.tableName, newId);
   }
 
   async read<T, I extends number | undefined>(query: Query): Promise<I extends number ? T : T[]> {
@@ -26,7 +27,7 @@ export abstract class BackEndAbstract<Entity extends object> {
 
     const values = await Storage.getAllValue(this.tableName);
     let filteredValues = values;
-
+    
     if (query.ids.length) {
       filteredValues = filteredValues?.filter((value: EntityAbstract) => query?.ids?.includes(value.id));
     }
@@ -34,12 +35,23 @@ export abstract class BackEndAbstract<Entity extends object> {
     return filteredValues.splice(query.offset, query.limit);
   }
 
-  async update<T extends Entity>(data: T): Promise<T> {
-    return Storage.putValue(this.tableName, data);
+  async update<T extends Entity & {id: number}>(data: T): Promise<T> {
+    const existingData = await Storage.getValue(this.tableName, data.id);
+    if (existingData) {
+      const newId = await Storage.putValue(this.tableName, data);
+      console.log(newId);
+      
+      return Storage.getValue(this.tableName, newId);
+    } else {
+      return new Promise((resolve, reject) => {
+        reject(new ServerError(404, `Object with id ${data.id} was not found`));
+        throw new ServerError(404, `Object with id ${data.id} was not found`);
+      });
+    }
   }
 
   async delete(query: Query): Promise<any> {
-    if (!query.ids.length) {
+    if (!query.ids?.length) {
       return new Promise((resolve, reject) => {
         reject(new ServerError(400, 'Please provide ids you want to delete'));
         throw new ServerError(400, 'Please provide ids you want to delete');

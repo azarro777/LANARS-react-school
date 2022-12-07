@@ -47,12 +47,22 @@ class PhotoEntity {
   date = 0;
   size = 0;
   type = '';
+<<<<<<< HEAD
 
+=======
+  id?: number;
+  
+>>>>>>> main
   constructor(data: PhotoEntity) {
     this.date = data.date;
-    this.description = data.description;
+    this.description = data.description || '';
     this.image = data.image;
     this.size = data.size;
     this.type = data.type;
+    if (data.id) {
+      this.id = data.id;
+    } else {
+      delete this.id;
+    }
   }
 }
