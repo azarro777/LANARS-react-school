@@ -1,4 +1,4 @@
-export default interface Ialbum {
+export default interface IPlbum {
   title: string;
   description: string;
   photos: number[];

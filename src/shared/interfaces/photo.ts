@@ -1,4 +1,4 @@
-export default interface Iphoto {
+export default interface IPhoto {
   image: string;
   description: string;
   date: number;
