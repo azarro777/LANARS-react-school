@@ -3,15 +3,9 @@ import { ServerError } from ".";
 import { BackEndAbstract } from "./BackEndAbstract";
 
 export class Album extends BackEndAbstract<AlbumEntity> {
-<<<<<<< HEAD
-  readonly route = "/api/albums";
-  readonly tableName = "albums";
-  readonly requiredFields = ["title", "description"];
-=======
   readonly route = '/api/albums';
   readonly tableName = 'albums';
   readonly requiredFields = ['title'];
->>>>>>> main
 
   constructor() {
     super();

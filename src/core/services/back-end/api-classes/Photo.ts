@@ -47,12 +47,8 @@ class PhotoEntity {
   date = 0;
   size = 0;
   type = '';
-<<<<<<< HEAD
-
-=======
   id?: number;
-  
->>>>>>> main
+
   constructor(data: PhotoEntity) {
     this.date = data.date;
     this.description = data.description || '';
