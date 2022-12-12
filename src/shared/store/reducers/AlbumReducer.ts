@@ -1,30 +1,11 @@
-import {  AnyAction, AsyncThunk, createSlice } from '@reduxjs/toolkit';
-import IAlbum from 'shared/interfaces/album';
+import {  createSlice } from '@reduxjs/toolkit';
+import { isFulfilledAction, isPendingAction, isRejectedAction } from '..';
 import { createAlbum, fetchAlbums, removeAlbum, updateAlbum } from './ActionCreators';
-
-type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
-
-type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
-type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
-type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
-
-const isPendingAction = (action: AnyAction): action is PendingAction =>
-  action.type.endsWith('/pending');
-
-type IError = {
-  code: number;
-  message: string;
-};
-
-type IState = {
-  status: 'idle' | 'pending' | 'succeeded' | 'failed';
-  albums: IAlbum[];
-  error: IError;
-};
+import { IState } from './types';
 
 const initialState: IState = {
   status: 'idle',
-  albums: [],
+  data: [],
   error: { code: 0, message: '' },
 };
 
@@ -34,37 +15,29 @@ export const albumSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchAlbums.fulfilled, (state, action) => {
-      if (action.payload as IAlbum[]) {
-        state.albums = action.payload as IAlbum[];
-        state.status = 'succeeded';
-      }
+      state.data = action.payload;
+      state.status = 'succeeded';
     });
     builder.addCase(createAlbum.fulfilled, (state, action) => {
-      state.albums.push(action.payload as IAlbum);
+      state.data.push(action.payload);
     });
     builder.addCase(updateAlbum.fulfilled, (state, action) => {
-      state.albums.forEach((el) =>
+      state.data.forEach((el) =>
         el.id === action.payload.id ? el : action.payload
       );
     });
     builder.addCase(removeAlbum.fulfilled, (state, action) => {
-      state.albums = state.albums.filter((el) => el.id !== action.payload.id);
+      state.data = state.data.filter((el: { id: number }) => el.id !== action.payload.id);
     });
     builder.addMatcher(isPendingAction, (state) => {
       state.status = 'pending';
     });
-    builder.addMatcher(
-      (action): action is RejectedAction => action.type.endsWith('rejected'),
-      (state) => {
-        state.status = 'failed';
-      }
-    );
-    builder.addMatcher<FulfilledAction>(
-      (action) => action.type.endsWith('/fulfilled'),
-      (state) => {
-        state.status = 'succeeded';
-      }
-    );
+    builder.addMatcher(isRejectedAction, (state) => {
+      state.status = 'failed';
+    });
+    builder.addMatcher(isFulfilledAction, (state) => {
+      state.status = 'succeeded';
+    });
   },
 });
 
