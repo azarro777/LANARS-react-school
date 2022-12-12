@@ -5,7 +5,7 @@ import IPhoto from '../../interfaces/photo';
 
 export const fetchPhotos = createAsyncThunk('photo/fetchPhotos', async (value: number[], {rejectWithValue}) => {
   try {
-    const response = await API.get<IPhoto[]>(`/api/photos${value.length > 0 ? ('?ids=' + value.join('')) : ''}`);
+    const response = await API.get(`/api/photos${value.length > 0 ? ('?ids=' + value.join('')) : ''}`) as IPhoto[];
     return response;
   } catch (error) {
     return rejectWithValue(error);
@@ -14,7 +14,7 @@ export const fetchPhotos = createAsyncThunk('photo/fetchPhotos', async (value: n
 
 export const createPhoto = createAsyncThunk('photo/createPhoto', async (photo: Omit<IPhoto, 'id'>, {rejectWithValue}) => {
   try {
-    const response = await API.post<Omit<IPhoto, 'id'>>('/api/photos', photo);
+    const response = await API.post('/api/photos', photo) as IPhoto;
     return response;
   } catch (error) {
     return rejectWithValue(error);
@@ -41,7 +41,7 @@ export const removePhoto = createAsyncThunk('photo/removePhoto', async (id: numb
 
 export const fetchAlbums = createAsyncThunk('photo/fetchAlbums', async (value: number[], {rejectWithValue}) => {
   try {
-    const response = await API.get<IAlbum[]>(`/api/albums${value.length > 0 ? ('?ids=' + value.join('')) : ''}`);
+    const response = await API.get(`/api/albums${value.length > 0 ? ('?ids=' + value.join('')) : ''}`) as IAlbum[];
     return response;
   } catch (error) {
     return rejectWithValue(error);
@@ -50,7 +50,7 @@ export const fetchAlbums = createAsyncThunk('photo/fetchAlbums', async (value: n
 
 export const createAlbum = createAsyncThunk('photo/createAlbum', async (album: Omit<IAlbum, 'id'>, {rejectWithValue}) => {
   try {
-    const response = await API.post<Omit<IAlbum, 'id'>>('/api/albums', album);
+    const response = await API.post('/api/albums', album) as IAlbum;
     return response;
   } catch (error) {
     return rejectWithValue(error);
