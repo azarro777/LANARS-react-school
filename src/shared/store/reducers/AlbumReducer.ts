@@ -1,12 +1,12 @@
 import {  createSlice } from '@reduxjs/toolkit';
-import { isFulfilledAction, isPendingAction, isRejectedAction } from '..';
+import { fulfilledAction, isFulfilledAction, isPendingAction, isRejectedAction, pendingAction, rejectedAction } from '..';
 import { createAlbum, fetchAlbums, removeAlbum, updateAlbum } from './ActionCreators';
 import { IState } from './types';
 
 const initialState: IState = {
   status: 'idle',
   data: [],
-  error: { code: 0, message: '' },
+  errorMessage: '',
 };
 
 export const albumSlice = createSlice({
@@ -29,15 +29,9 @@ export const albumSlice = createSlice({
     builder.addCase(removeAlbum.fulfilled, (state, action) => {
       state.data = state.data.filter((el: { id: number }) => el.id !== action.payload.id);
     });
-    builder.addMatcher(isPendingAction, (state) => {
-      state.status = 'pending';
-    });
-    builder.addMatcher(isRejectedAction, (state) => {
-      state.status = 'failed';
-    });
-    builder.addMatcher(isFulfilledAction, (state) => {
-      state.status = 'succeeded';
-    });
+    builder.addMatcher(isPendingAction, pendingAction);
+    builder.addMatcher(isRejectedAction, rejectedAction);
+    builder.addMatcher(isFulfilledAction, fulfilledAction);
   },
 });
 
