@@ -1,7 +1,7 @@
 import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit';
 import AlbumReducer from './reducers/AlbumReducer';
 import PhotoReducer from './reducers/PhotoReducer';
-import { FulfilledAction, PendingAction, RejectedAction } from './reducers/types';
+import { FulfilledAction, IState, PendingAction, RejectedAction } from './reducers/types';
 
 const rootReducer = combineReducers({
   AlbumReducer,
@@ -24,3 +24,18 @@ export const isRejectedAction = (action: AnyAction): action is RejectedAction =>
 export const isFulfilledAction = (
   action: AnyAction
 ): action is FulfilledAction => action.type.endsWith('/fulfilled');
+
+export const pendingAction = (state: IState): void => {
+  state.status = 'pending';
+  state.errorMessage = '';
+};
+
+export const rejectedAction = (state: IState, action: AnyAction): void => {
+  state.status = 'failed';
+  state.errorMessage = action.payload.message;
+};
+
+export const fulfilledAction = (state: IState): void => {
+  state.status = 'succeeded';
+  state.errorMessage = '';
+};
