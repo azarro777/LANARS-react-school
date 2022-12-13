@@ -41,7 +41,7 @@ export const removePhoto = createAsyncThunk('photo/removePhoto', async (id: numb
 
 export const fetchAlbums = createAsyncThunk('photo/fetchAlbums', async (value: number[], {rejectWithValue}) => {
   try {
-    const response = await API.get(`/api/albums${value.length > 0 ? ('?ids=' + value.join('')) : ''}`) as IAlbum[];
+    const response = await API.get(`/api/albums${value.length > 0 ? ('?ids=' + value.join('')) : ''}`) as IAlbum[] | IAlbum;
     return response;
   } catch (error) {
     return rejectWithValue(error);
