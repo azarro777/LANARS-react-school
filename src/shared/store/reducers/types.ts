@@ -11,5 +11,5 @@ export type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 export type IState = {
   status: 'idle' | 'pending' | 'succeeded' | 'failed';
   data: (IAlbum | IPhoto)[];
-  errorMessage: '';
+  errorMessage: string;
 };
