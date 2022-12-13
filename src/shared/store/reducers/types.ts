@@ -8,13 +8,8 @@ export type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
 export type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
 export type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 
-type IError = {
-  code: number;
-  message: string;
-};
-
 export type IState = {
   status: 'idle' | 'pending' | 'succeeded' | 'failed';
   data: (IAlbum | IPhoto)[];
-  error: IError;
+  errorMessage: '';
 };
