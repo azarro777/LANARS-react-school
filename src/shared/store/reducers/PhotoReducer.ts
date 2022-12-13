@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { isFulfilledAction, isPendingAction, isRejectedAction } from '..';
+import { fulfilledAction, isFulfilledAction, isPendingAction, isRejectedAction, pendingAction, rejectedAction } from '..';
 import {
   createPhoto,
   fetchPhotos,
@@ -11,7 +11,7 @@ import { IState } from './types';
 const initialState: IState = {
   status: 'idle',
   data: [],
-  error: { code: 0, message: '' },
+  errorMessage: '',
 };
 
 export const photoSlice = createSlice({
@@ -34,15 +34,9 @@ export const photoSlice = createSlice({
     builder.addCase(removePhoto.fulfilled, (state, action) => {
       state.data = state.data.filter((el) => el.id !== action.payload.id);
     });
-    builder.addMatcher(isPendingAction, (state) => {
-      state.status = 'pending';
-    });
-    builder.addMatcher(isRejectedAction, (state) => {
-      state.status = 'failed';
-    });
-    builder.addMatcher(isFulfilledAction, (state) => {
-      state.status = 'succeeded';
-    });
+    builder.addMatcher(isPendingAction, pendingAction);
+    builder.addMatcher(isRejectedAction, rejectedAction);
+    builder.addMatcher(isFulfilledAction, fulfilledAction);
   },
 });
 
