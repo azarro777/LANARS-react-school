@@ -15,7 +15,11 @@ export const albumSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchAlbums.fulfilled, (state, action) => {
-      state.data = action.payload;
+      if (Array.isArray(action.payload)) {
+        state.data = [...action.payload];
+      } else {
+        state.data = [action.payload];
+      }
       state.status = 'succeeded';
     });
     builder.addCase(createAlbum.fulfilled, (state, action) => {
