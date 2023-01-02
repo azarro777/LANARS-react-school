@@ -6,10 +6,10 @@ import {
   removePhoto,
   updatePhoto,
 } from './ActionCreators';
-import { IState } from './types';
+import { DataStataus, IState } from './types';
 
 const initialState: IState = {
-  status: 'idle',
+  status: DataStataus.IDLE,
   data: [],
   errorMessage: '',
 };
@@ -20,8 +20,12 @@ export const photoSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchPhotos.fulfilled, (state, action) => {
-      state.data = action.payload;
-      state.status = 'succeeded';
+      if (Array.isArray(action.payload)) {
+        state.data = [...action.payload];
+      } else {
+        state.data = [action.payload];
+      }
+      state.status = DataStataus.SUCCEEDED;
     });
     builder.addCase(createPhoto.fulfilled, (state, action) => {
       state.data.push(action.payload);
@@ -34,9 +38,9 @@ export const photoSlice = createSlice({
     builder.addCase(removePhoto.fulfilled, (state, action) => {
       state.data = state.data.filter((el) => el.id !== action.payload.id);
     });
-    builder.addMatcher(isPendingAction, pendingAction);
-    builder.addMatcher(isRejectedAction, rejectedAction);
-    builder.addMatcher(isFulfilledAction, fulfilledAction);
+    builder.addMatcher(isPendingAction('photos/'), pendingAction);
+    builder.addMatcher(isRejectedAction('photos/'), rejectedAction);
+    builder.addMatcher(isFulfilledAction('photos/'), fulfilledAction);
   },
 });
 
